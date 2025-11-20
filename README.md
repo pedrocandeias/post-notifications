@@ -26,7 +26,7 @@ A comprehensive WordPress plugin for sending customizable email notifications. T
 
 ## Features
 
-### 📧 Post Notifications
+### Post Notifications
 
 Track all important post status changes:
 
@@ -37,7 +37,7 @@ Track all important post status changes:
 - **Published post updated** - When live content is modified
 - **Post moved to trash** - When content is deleted
 
-### 🔐 Admin Notifications
+### Admin Notifications
 
 Monitor critical administrative actions grouped by category:
 
@@ -64,7 +64,7 @@ Monitor critical administrative actions grouped by category:
 
 Each notification group has its own email recipient, allowing you to route different types of alerts to different team members.
 
-### 📮 SMTP Configuration
+### SMTP Configuration
 
 Send emails through your own mail server with advanced features:
 
@@ -73,7 +73,7 @@ Send emails through your own mail server with advanced features:
 - **Account selection**: Automatic credential matching based on sender email
 - **Test functionality**: Send test emails to verify configuration
 
-### 👥 Role Management
+### Role Management
 
 - Select any WordPress role to receive notifications
 - **Automatic custom role detection** - Works with roles from plugins/themes
@@ -82,14 +82,14 @@ Send emails through your own mail server with advanced features:
 - Individual user selection in addition to roles
 - Duplicate prevention (users with multiple roles get one email)
 
-### 🎨 User Experience
+### User Experience
 
 - Clean, HTML-formatted emails with details and action links
 - Prevents spam from autosave and revisions
 - Rate limiting on update notifications (max 1 per hour)
 - Support for custom post types
 
-### 🌍 Translation Ready
+### Translation Ready
 
 - **Fully internationalized** and translation-ready
 - Includes **Portuguese (pt_PT)** and **Spanish (es_ES)** translations
@@ -305,10 +305,6 @@ The plugin is **fully internationalized** and ready for translation.
 | English | en_US | Default |
 | Portuguese (Portugal) | pt_PT | Complete |
 | Spanish (Spain) | es_ES | Complete |
-
-### Add Your Language
-
-Want to translate to your language? See [TRANSLATION.md](TRANSLATION.md) for step-by-step instructions.
 
 Contributions are welcome! Submit your translations via pull request.
 
