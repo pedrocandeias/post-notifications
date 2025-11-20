@@ -28,10 +28,10 @@ class Post_Notifications_Settings {
      */
     public function add_admin_menu() {
         add_options_page(
-            __('Post Notifications Settings', 'post-notifications'),
-            __('Post Notifications', 'post-notifications'),
+            __('WP Notifications Settings', 'wp-site-notifications'),
+            __('WP Notifications', 'wp-site-notifications'),
             'manage_options',
-            'post-notifications',
+            'wp-site-notifications',
             array($this, 'render_settings_page')
         );
     }
@@ -128,6 +128,81 @@ class Post_Notifications_Settings {
             }
         } else {
             $sanitized['recipient_users'] = array();
+        }
+
+        // Sanitize admin notifications
+        $allowed_admin_notifications = array(
+            'user_registered',
+            'user_deleted',
+            'user_role_changed',
+            'plugin_activated',
+            'plugin_deactivated',
+            'plugin_updated',
+            'theme_switched',
+            'theme_updated',
+            'core_updated',
+            'failed_login',
+            'password_reset'
+        );
+
+        // Group email fields
+        $group_emails = array(
+            'user_management_email',
+            'plugin_management_email',
+            'theme_management_email',
+            'core_updates_email',
+            'security_email'
+        );
+
+        $sanitized['admin_notifications'] = array();
+        if (isset($input['admin_notifications']) && is_array($input['admin_notifications'])) {
+            // Sanitize group emails
+            foreach ($group_emails as $email_key) {
+                if (isset($input['admin_notifications'][$email_key])) {
+                    $sanitized['admin_notifications'][$email_key] = sanitize_email($input['admin_notifications'][$email_key]);
+                } else {
+                    $sanitized['admin_notifications'][$email_key] = '';
+                }
+            }
+
+            // Sanitize notification toggles
+            foreach ($input['admin_notifications'] as $key => $notification) {
+                if (in_array($key, $allowed_admin_notifications, true)) {
+                    $sanitized['admin_notifications'][$key] = array(
+                        'enabled' => !empty($notification['enabled']) ? '1' : '0'
+                    );
+                }
+            }
+        }
+
+        // Sanitize SMTP settings
+        $sanitized['smtp'] = array();
+        if (isset($input['smtp']) && is_array($input['smtp'])) {
+            $sanitized['smtp']['enabled'] = !empty($input['smtp']['enabled']) ? '1' : '0';
+            $sanitized['smtp']['host'] = isset($input['smtp']['host']) ? sanitize_text_field($input['smtp']['host']) : '';
+            $sanitized['smtp']['port'] = isset($input['smtp']['port']) ? absint($input['smtp']['port']) : 587;
+            $sanitized['smtp']['encryption'] = isset($input['smtp']['encryption']) && in_array($input['smtp']['encryption'], array('', 'ssl', 'tls'), true) ? $input['smtp']['encryption'] : 'tls';
+            $sanitized['smtp']['auth'] = !empty($input['smtp']['auth']) ? '1' : '0';
+            $sanitized['smtp']['default_account'] = isset($input['smtp']['default_account']) ? sanitize_email($input['smtp']['default_account']) : '';
+
+            // Sanitize accounts
+            $sanitized['smtp']['accounts'] = array();
+            if (isset($input['smtp']['accounts']) && is_array($input['smtp']['accounts'])) {
+                $account_index = 0;
+                foreach ($input['smtp']['accounts'] as $account) {
+                    $email = isset($account['email']) ? sanitize_email($account['email']) : '';
+                    // Only save accounts with valid email
+                    if (!empty($email)) {
+                        $sanitized['smtp']['accounts'][$account_index] = array(
+                            'email' => $email,
+                            'name' => isset($account['name']) ? sanitize_text_field($account['name']) : '',
+                            'username' => isset($account['username']) ? sanitize_text_field($account['username']) : '',
+                            'password' => isset($account['password']) ? $account['password'] : '' // Don't sanitize password to preserve special chars
+                        );
+                        $account_index++;
+                    }
+                }
+            }
         }
 
         return $sanitized;

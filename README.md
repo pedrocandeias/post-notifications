@@ -1,10 +1,10 @@
-# Post Notifications
+# WP Site Notifications
 
 [![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-blue.svg)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-7.0%2B-purple.svg)](https://php.net/)
 [![License](https://img.shields.io/badge/License-GPLv2%2B-green.svg)](LICENSE)
 
-A powerful WordPress plugin that sends customizable email notifications to selected user roles when post status changes occur. Stay informed about content workflow events automatically.
+A comprehensive WordPress plugin for sending customizable email notifications. Track post status changes, monitor administrative actions, and configure custom SMTP settings for reliable email delivery.
 
 ---
 
@@ -26,16 +26,52 @@ A powerful WordPress plugin that sends customizable email notifications to selec
 
 ## Features
 
-### 📧 Notification Types
+### 📧 Post Notifications
 
 Track all important post status changes:
 
-- ✅ **Post submitted for review** (Pending) - When authors submit content for approval
-- ✅ **Post published** - When content goes live
-- ✅ **Post saved as draft** - When work is saved
-- ✅ **Post scheduled** - When future publications are set
-- ✅ **Published post updated** - When live content is modified
-- ✅ **Post moved to trash** - When content is deleted
+- **Post submitted for review** (Pending) - When authors submit content for approval
+- **Post published** - When content goes live
+- **Post saved as draft** - When work is saved
+- **Post scheduled** - When future publications are set
+- **Published post updated** - When live content is modified
+- **Post moved to trash** - When content is deleted
+
+### 🔐 Admin Notifications
+
+Monitor critical administrative actions grouped by category:
+
+#### User Management
+- New user registration
+- User deleted
+- User role changed
+
+#### Plugin Management
+- Plugin activated
+- Plugin deactivated
+- Plugin updated
+
+#### Theme Management
+- Theme switched
+- Theme updated
+
+#### Core Updates
+- WordPress core updated
+
+#### Security
+- Failed login attempts (rate-limited)
+- Password reset requests
+
+Each notification group has its own email recipient, allowing you to route different types of alerts to different team members.
+
+### 📮 SMTP Configuration
+
+Send emails through your own mail server with advanced features:
+
+- **Server settings**: Host, port, encryption (SSL/TLS)
+- **Multiple email accounts**: Configure different sender emails with their own credentials
+- **Account selection**: Automatic credential matching based on sender email
+- **Test functionality**: Send test emails to verify configuration
 
 ### 👥 Role Management
 
@@ -43,14 +79,15 @@ Track all important post status changes:
 - **Automatic custom role detection** - Works with roles from plugins/themes
 - User count display for each role
 - Visual distinction between built-in and custom roles
+- Individual user selection in addition to roles
 - Duplicate prevention (users with multiple roles get one email)
 
 ### 🎨 User Experience
 
-- Clean, HTML-formatted emails with post details and action links
+- Clean, HTML-formatted emails with details and action links
 - Prevents spam from autosave and revisions
 - Rate limiting on update notifications (max 1 per hour)
-- Smart filtering (only tracks regular posts, not pages or custom post types)
+- Support for custom post types
 
 ### 🌍 Translation Ready
 
@@ -63,38 +100,40 @@ Track all important post status changes:
 ### Method 1: Manual Installation
 
 1. Download the latest release from the [Releases page](../../releases)
-2. Upload the `post-notifications` folder to `/wp-content/plugins/`
+2. Upload the `wp-site-notifications` folder to `/wp-content/plugins/`
 3. Activate the plugin through the **Plugins** menu in WordPress
-4. Go to **Settings > Post Notifications** to configure
+4. Go to **Settings > WP Notifications** to configure
 
 ### Method 2: WordPress Admin
 
 1. Go to **Plugins > Add New** in your WordPress admin
-2. Search for "Post Notifications"
+2. Search for "WP Site Notifications"
 3. Click **Install Now** and then **Activate**
-4. Go to **Settings > Post Notifications** to configure
+4. Go to **Settings > WP Notifications** to configure
 
 ### Method 3: WP-CLI
 
 ```bash
-wp plugin install post-notifications --activate
+wp plugin install wp-site-notifications --activate
 ```
 
 ### First-Time Setup
 
 Upon activation, default settings are automatically configured:
-- ✅ Enabled notifications: Pending, Published, Scheduled
-- 👤 Default recipients: Administrators only
+- Enabled notifications: Pending, Published, Scheduled
+- Default recipients: Administrators only
 
-You can customize these in **Settings > Post Notifications**.
+You can customize these in **Settings > WP Notifications**.
 
 ## Configuration
 
-Navigate to **Settings > Post Notifications** in your WordPress admin panel.
+Navigate to **Settings > WP Notifications** in your WordPress admin panel.
 
-### 🔔 Choosing Notification Types
+### Posts Tab
 
-Select which post status changes trigger notifications:
+Configure post-related notifications:
+
+#### Notification Types
 
 | Notification Type | When It's Sent |
 |------------------|----------------|
@@ -105,42 +144,84 @@ Select which post status changes trigger notifications:
 | Published post updated | Changes are made to an already published post |
 | Post moved to trash | Post is deleted |
 
-### 👥 Selecting Recipient Roles
+#### Recipient Roles
 
 Choose which user roles receive notifications:
 
-#### Built-in WordPress Roles
+**Built-in WordPress Roles**
 - Administrator
 - Editor
 - Author
 - Contributor
 - Subscriber
 
-#### Custom Roles (Automatically Detected)
-The plugin automatically detects roles added by:
-- Plugins (e.g., WooCommerce Shop Manager, SEO Manager)
-- Themes
-- Custom code
+**Custom Roles (Automatically Detected)**
+The plugin automatically detects roles added by plugins, themes, or custom code.
 
-**Features:**
-- 📊 User count displayed for each role
-- 🎨 Visual separation between built-in and custom roles
-- 🚫 Duplicate prevention (users with multiple roles receive only one email)
+#### Individual Users
 
-> 📖 See [CUSTOM-ROLES.md](CUSTOM-ROLES.md) for detailed information about custom role support.
+Select specific users to receive notifications regardless of their role.
+
+#### Post Types
+
+Choose which post types trigger notifications (posts, pages, custom post types).
+
+### Admin Tab
+
+Configure administrative notifications with dedicated email addresses for each group:
+
+| Group | Notifications | Email Field |
+|-------|--------------|-------------|
+| User Management | Registration, deletion, role changes | Separate email |
+| Plugin Management | Activation, deactivation, updates | Separate email |
+| Theme Management | Switching, updates | Separate email |
+| Core Updates | WordPress updates | Separate email |
+| Security | Failed logins, password resets | Separate email |
+
+This allows routing different alert types to different team members (e.g., security alerts to security@company.com).
+
+### SMTP Tab
+
+Configure email delivery through your SMTP server:
+
+#### Server Settings
+- **Enable SMTP**: Toggle SMTP on/off
+- **SMTP Host**: Your mail server (e.g., smtp.gmail.com)
+- **SMTP Port**: Common ports - 25, 465 (SSL), 587 (TLS)
+- **Encryption**: None, SSL, or TLS
+- **Authentication**: Enable/disable SMTP auth
+
+#### Email Accounts
+
+Add multiple email accounts, each with:
+- **From Email**: Sender address
+- **From Name**: Display name
+- **SMTP Username**: Account credentials
+- **SMTP Password**: Account password
+
+The system automatically uses the correct credentials based on the sender email address.
+
+#### Default Account
+
+Select which account to use when no specific sender is configured.
+
+#### Test Email
+
+Send a test email to verify your SMTP configuration is working correctly.
 
 ## Usage
 
-### 📬 What's Included in Notification Emails
+### What's Included in Notification Emails
 
 Each email contains:
 
 - **Site information**: Name and link to your WordPress site
-- **Post details**: Title, author name, and current status
-- **Action links**: Quick access to view, edit, or review the post
+- **Event details**: What happened and when
+- **Relevant data**: User info, post details, plugin names, etc.
+- **Action links**: Quick access to relevant admin pages
 - **Clean HTML formatting**: Professional, readable layout
 
-### Example Email
+### Example Post Notification
 
 ```
 [Your Site Name]
@@ -154,24 +235,38 @@ Status: Published
 [View Post] [Edit Post]
 ```
 
+### Example Admin Notification
+
+```
+[Your Site Name]
+
+Plugin Activated
+
+Plugin: WooCommerce
+Version: 8.0.0
+Date: 2025-01-15 10:30:00
+
+[View Plugins]
+```
+
 ## Customization
 
-### 🔌 Developer Hooks
+### Developer Hooks
 
 The plugin provides filter hooks for advanced customization:
 
 #### Modify Email Subject
 
 ```php
-add_filter('post_notifications_email_subject', function($subject, $post, $new_status, $old_status) {
+add_filter('post_notifications_email_subject', function($subject, $notification_type, $post) {
     return "Custom: " . $subject;
-}, 10, 4);
+}, 10, 3);
 ```
 
 #### Modify Email Body
 
 ```php
-add_filter('post_notifications_email_message', function($message, $post, $new_status, $old_status) {
+add_filter('post_notifications_email_message', function($message, $notification_type, $post, $author_name) {
     return $message . "\n\nCustom footer text";
 }, 10, 4);
 ```
@@ -179,33 +274,25 @@ add_filter('post_notifications_email_message', function($message, $post, $new_st
 #### Modify Recipients List
 
 ```php
-add_filter('post_notifications_recipients', function($recipients, $post, $new_status) {
-    // Add a specific email
-    $recipients[] = 'custom@example.com';
+add_filter('post_notifications_recipients', function($recipients, $notification_type, $post) {
+    // Add a specific user
+    $extra_user = get_user_by('email', 'custom@example.com');
+    if ($extra_user) {
+        $recipients[] = $extra_user;
+    }
     return $recipients;
 }, 10, 3);
 ```
 
-### 🛠️ Technical Details
+### Technical Details
 
 | Aspect | Implementation |
 |--------|----------------|
-| **Hook Used** | `transition_post_status` |
-| **Post Type** | Standard posts only (excludes pages & custom post types) |
-| **Autosave/Revisions** | Automatically ignored to prevent spam |
-| **Email Function** | WordPress native `wp_mail()` |
-| **Rate Limiting** | 1 update notification per hour per post |
-| **Security** | CSRF protection, XSS prevention, SQL injection hardening |
-
-### 🚀 Roadmap
-
-Future versions may include:
-
-- [ ] Custom post type support
-- [ ] Visual email template editor
-- [ ] Additional notification triggers
-- [ ] Per-user notification preferences
-- [ ] Notification history log
+| **Post Hook** | `transition_post_status` |
+| **Admin Hooks** | Various WordPress action hooks |
+| **Email Function** | WordPress native `wp_mail()` with optional SMTP |
+| **Rate Limiting** | Failed logins (5 min), post updates (1 hour) |
+| **Security** | CSRF protection, XSS prevention, input sanitization |
 
 ## Translation
 
@@ -215,9 +302,9 @@ The plugin is **fully internationalized** and ready for translation.
 
 | Language | Code | Status |
 |----------|------|--------|
-| English | en_US | ✅ Default |
-| Portuguese (Portugal) | pt_PT | ✅ Complete |
-| Spanish (Spain) | es_ES | ✅ Complete |
+| English | en_US | Default |
+| Portuguese (Portugal) | pt_PT | Complete |
+| Spanish (Spain) | es_ES | Complete |
 
 ### Add Your Language
 
@@ -236,22 +323,36 @@ Contributions are welcome! Submit your translations via pull request.
 
 ## Changelog
 
+### Version 2.0.0
+
+#### New Features
+- **Admin Notifications**: Monitor user management, plugins, themes, core updates, and security events
+- **SMTP Support**: Configure custom mail server with multiple email accounts
+- **Multiple SMTP Accounts**: Different credentials for different sender emails
+- **Enhanced Post Notifications**: Support for custom post types and individual user selection
+
+#### Improvements
+- Renamed plugin from "Post Notifications" to "WP Site Notifications"
+- Reorganized settings into tabbed interface (Posts, Admin, SMTP)
+- Group-based email routing for admin notifications
+- Better UI for notification configuration
+
 ### Version 1.0.0 (Initial Release)
 
-#### ✨ Features
-- 📧 6 notification types for post status changes
-- 👥 Role-based recipient selection (including custom roles)
-- 📨 HTML-formatted email templates
-- 🌍 Full translation support (pt_PT, es_ES included)
-- 🔌 Developer hooks for extensibility
+#### Features
+- 6 notification types for post status changes
+- Role-based recipient selection (including custom roles)
+- HTML-formatted email templates
+- Full translation support (pt_PT, es_ES included)
+- Developer hooks for extensibility
 
-#### 🔒 Security
+#### Security
 - CSRF token protection
 - XSS prevention
 - SQL injection hardening
 - Input sanitization and validation
 
-#### ⚡ Performance
+#### Performance
 - Rate limiting (1 update notification per hour)
 - Autosave/revision filtering
 - Duplicate notification prevention
@@ -264,7 +365,7 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 Contributions are welcome! Here's how you can help:
 
-### 🐛 Report Bugs
+### Report Bugs
 
 Found a bug? [Open an issue](../../issues/new) with:
 - WordPress version
@@ -273,14 +374,14 @@ Found a bug? [Open an issue](../../issues/new) with:
 - Steps to reproduce
 - Expected vs actual behavior
 
-### 💡 Suggest Features
+### Suggest Features
 
 Have an idea? [Open a feature request](../../issues/new) describing:
 - The problem you're trying to solve
 - Your proposed solution
 - Any alternative solutions considered
 
-### 🔧 Submit Pull Requests
+### Submit Pull Requests
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -288,7 +389,7 @@ Have an idea? [Open a feature request](../../issues/new) describing:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-### 📝 Code Standards
+### Code Standards
 
 - Follow [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/)
 - Include inline documentation
@@ -298,24 +399,24 @@ Have an idea? [Open a feature request](../../issues/new) describing:
 
 ## Support
 
-### 📚 Documentation
+### Documentation
 
 - [Custom Roles Guide](CUSTOM-ROLES.md)
 - [Translation Guide](TRANSLATION.md)
 - [Changelog](CHANGELOG.md)
 
-### 💬 Get Help
+### Get Help
 
-- 🐛 **Bug reports**: [GitHub Issues](../../issues)
-- 💡 **Feature requests**: [GitHub Issues](../../issues)
-- ❓ **Questions**: [GitHub Discussions](../../discussions)
+- **Bug reports**: [GitHub Issues](../../issues)
+- **Feature requests**: [GitHub Issues](../../issues)
+- **Questions**: [GitHub Discussions](../../discussions)
 
-### ⭐ Show Your Support
+### Show Your Support
 
 If this plugin helped you, please:
-- ⭐ Star this repository
-- 🐦 Share it on social media
-- 📝 Write a review
+- Star this repository
+- Share it on social media
+- Write a review
 
 ---
 
@@ -324,7 +425,7 @@ If this plugin helped you, please:
 This plugin is licensed under the **GNU General Public License v2.0 or later**.
 
 ```
-Post Notifications - WordPress Plugin
+WP Site Notifications - WordPress Plugin
 Copyright (C) 2025
 
 This program is free software; you can redistribute it and/or modify
@@ -344,7 +445,7 @@ See [LICENSE](LICENSE) file for full license text.
 
 <div align="center">
 
-**Made with ❤️ for the WordPress community**
+**Made with care for the WordPress community**
 
 [Report Bug](../../issues) · [Request Feature](../../issues) · [Documentation](../../wiki)
 

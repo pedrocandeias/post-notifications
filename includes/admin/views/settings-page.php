@@ -18,11 +18,14 @@ if (!defined('ABSPATH')) {
 
     <!-- Tab Navigation -->
     <h2 class="nav-tab-wrapper">
-        <a href="?page=post-notifications&tab=posts" class="nav-tab <?php echo $active_tab === 'posts' ? 'nav-tab-active' : ''; ?>">
-            <?php _e('Posts', 'post-notifications'); ?>
+        <a href="?page=wp-site-notifications&tab=posts" class="nav-tab <?php echo $active_tab === 'posts' ? 'nav-tab-active' : ''; ?>">
+            <?php _e('Posts', 'wp-site-notifications'); ?>
         </a>
-        <a href="?page=post-notifications&tab=admin" class="nav-tab <?php echo $active_tab === 'admin' ? 'nav-tab-active' : ''; ?>">
-            <?php _e('Admin', 'post-notifications'); ?>
+        <a href="?page=wp-site-notifications&tab=admin" class="nav-tab <?php echo $active_tab === 'admin' ? 'nav-tab-active' : ''; ?>">
+            <?php _e('Admin', 'wp-site-notifications'); ?>
+        </a>
+        <a href="?page=wp-site-notifications&tab=smtp" class="nav-tab <?php echo $active_tab === 'smtp' ? 'nav-tab-active' : ''; ?>">
+            <?php _e('SMTP', 'wp-site-notifications'); ?>
         </a>
     </h2>
 
@@ -48,7 +51,11 @@ if (!defined('ABSPATH')) {
                 <?php include POST_NOTIFICATIONS_PLUGIN_DIR . 'includes/admin/views/tab-admin.php'; ?>
             <?php endif; ?>
 
-            <?php submit_button(__('Save Settings', 'post-notifications')); ?>
+            <?php if ($active_tab === 'smtp') : ?>
+                <?php include POST_NOTIFICATIONS_PLUGIN_DIR . 'includes/admin/views/tab-smtp.php'; ?>
+            <?php endif; ?>
+
+            <?php submit_button(__('Save Settings', 'wp-site-notifications')); ?>
         </form>
     </div><!-- .post-notifications-tab-content -->
 

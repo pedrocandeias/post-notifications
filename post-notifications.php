@@ -1,14 +1,14 @@
 <?php
 /**
- * Plugin Name: Post Notifications
- * Plugin URI: https://github.com/pedrocandeias/post-notifications
+ * Plugin Name: WP Site Notifications
+ * Plugin URI: https://github.com/pedrocandeias/wp-site-notifications
  * Description: Send customizable email notifications to selected user roles when post status changes (pending, published, etc.)
  * Version: 1.0.0
  * Author: Pedro Candeias
  * Author URI: https://pedrocandeias.net
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: post-notifications
+ * Text Domain: wp-site-notifications
  */
 
 // Exit if accessed directly
@@ -35,6 +35,8 @@ class Post_Notifications {
     private static $instance = null;
     private $settings;
     private $notifications_handler;
+    private $admin_notifications_handler;
+    private $smtp;
 
     /**
      * Get singleton instance
@@ -62,6 +64,8 @@ class Post_Notifications {
         // Core classes
         require_once POST_NOTIFICATIONS_PLUGIN_DIR . 'includes/class-email.php';
         require_once POST_NOTIFICATIONS_PLUGIN_DIR . 'includes/class-notifications-handler.php';
+        require_once POST_NOTIFICATIONS_PLUGIN_DIR . 'includes/class-admin-notifications-handler.php';
+        require_once POST_NOTIFICATIONS_PLUGIN_DIR . 'includes/class-smtp.php';
 
         // Admin classes
         if (is_admin()) {
@@ -85,8 +89,14 @@ class Post_Notifications {
      * Initialize plugin components
      */
     private function init_components() {
+        // Initialize SMTP handler (must be early to hook into phpmailer_init)
+        $this->smtp = new WP_Site_Notifications_SMTP();
+
         // Initialize notifications handler
         $this->notifications_handler = new Post_Notifications_Handler();
+
+        // Initialize admin notifications handler
+        $this->admin_notifications_handler = new Admin_Notifications_Handler();
 
         // Initialize settings page if in admin
         if (is_admin()) {
@@ -121,6 +131,35 @@ class Post_Notifications {
             'recipient_roles' => array('administrator'),
             'recipient_users' => array(), // Individual users
             'enabled_post_types' => array('post'), // Default to standard posts
+            'admin_notifications' => array(
+                // Group emails
+                'user_management_email' => '',
+                'plugin_management_email' => '',
+                'theme_management_email' => '',
+                'core_updates_email' => '',
+                'security_email' => '',
+                // Notification toggles
+                'user_registered' => array('enabled' => '0'),
+                'user_deleted' => array('enabled' => '0'),
+                'user_role_changed' => array('enabled' => '0'),
+                'plugin_activated' => array('enabled' => '0'),
+                'plugin_deactivated' => array('enabled' => '0'),
+                'plugin_updated' => array('enabled' => '0'),
+                'theme_switched' => array('enabled' => '0'),
+                'theme_updated' => array('enabled' => '0'),
+                'core_updated' => array('enabled' => '0'),
+                'failed_login' => array('enabled' => '0'),
+                'password_reset' => array('enabled' => '0'),
+            ),
+            'smtp' => array(
+                'enabled' => '0',
+                'host' => '',
+                'port' => 587,
+                'encryption' => 'tls',
+                'auth' => '1',
+                'default_account' => '',
+                'accounts' => array(),
+            ),
         );
 
         if (!get_option('post_notifications_settings')) {
